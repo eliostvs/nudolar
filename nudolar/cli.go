@@ -19,9 +19,6 @@ func CLI(args []string) int {
 	var app appEnv
 
 	if err := app.fromArgs(args); err != nil {
-		if err != flag.ErrHelp {
-			fmt.Fprintf(os.Stderr, "Erro nos argumentos: %v\n", err)
-		}
 		return 2
 	}
 
@@ -53,6 +50,8 @@ func (app *appEnv) fromArgs(args []string) error {
 	}
 
 	if err := app.parsePrice(fl.Args()); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fl.Usage()
 		return err
 	}
 
