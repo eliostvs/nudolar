@@ -77,7 +77,7 @@ func (app *appEnv) parsePrice(args []string) error {
 
 	price, err := strconv.ParseFloat(args[0], 64)
 	if err != nil {
-		return fmt.Errorf("valor inválido \"%s\"", args[0])
+		return fmt.Errorf("valor inválido: %s", args[0])
 	}
 
 	if price <= 0.0 {
