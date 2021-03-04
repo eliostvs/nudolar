@@ -33,7 +33,7 @@ type PTAX struct {
 func (p PTAX) String() string {
 	return fmt.Sprintf(
 		"Cotação do Dólar do dia %s: %s",
-		p.Timestamp.Format("02/01/2006 15:05"),
+		p.Timestamp.Format("02/01/2006 15:04"),
 		formatPrice(p.SellingRate),
 	)
 }
