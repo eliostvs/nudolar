@@ -38,7 +38,7 @@ type appEnv struct {
 func (app *appEnv) fromArgs(args []string) error {
 	fl := flag.NewFlagSet("nudolar", flag.ContinueOnError)
 	fl.Usage = func() {
-		fmt.Fprint(fl.Output(), "Uso: nudolar [OPCOES] DOLAR\n  Simule o valor de uma compra internacional na sua fatura do Nubanco\n\n")
+		fmt.Fprint(fl.Output(), "Uso: nudolar [opcoes] <dolar>\n\n  Simule o valor de uma compra internacional na sua fatura do Nubanco\n\n")
 		fmt.Fprint(fl.Output(), "Exemplo: \n  nudolar 10.66\n\n")
 		fmt.Fprintln(fl.Output(), "Opções:")
 		fl.PrintDefaults()
