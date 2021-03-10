@@ -51,7 +51,7 @@ func (app *appEnv) fromArgs(args []string) error {
 	}
 
 	if err := app.parsePrice(fl.Args()); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		fmt.Fprintf(fl.Output(), "%v\n", err)
 		fl.Usage()
 		return err
 	}
