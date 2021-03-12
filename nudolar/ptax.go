@@ -21,7 +21,7 @@ type Time struct {
 
 func (t *Time) UnmarshalJSON(b []byte) (err error) {
 	s := strings.Trim(string(b), "\"")
-	t.Time, err = time.Parse("2006-02-01 15:04:05.000", s)
+	t.Time, err = time.Parse("2006-02-01 15:04:05", s)
 	return err
 }
 
