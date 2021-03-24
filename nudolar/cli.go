@@ -63,11 +63,10 @@ func (app *appEnv) run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), app.timeout)
 	defer cancel()
 
-	ptax := NewPTAXClient()
-	if quoting, err := ptax.Get(ctx); err != nil {
+	if ptax, err := NewPTAX(ctx); err != nil {
 		return err
 	} else {
-		return app.show(quoting, calcPrices(app.price, quoting.SellingRate))
+		return app.show(ptax, calcPrices(app.price, ptax.SellingRate))
 	}
 }
 
@@ -90,42 +89,42 @@ func (app *appEnv) parsePrice(args []string) error {
 	return nil
 }
 
-func (app *appEnv) show(ptax PTAX, p Prices) error {
-	_, err := fmt.Printf("%s\n%s", ptax, p)
+func (app *appEnv) show(ptax PTAX, prices Prices) error {
+	_, err := fmt.Printf(
+		"\n Total       = %s\n\n %-9v   = %s\n IOF (%.2f%%) = %s\n\n Conversão baseada na cotação de %s:\n %-11v = %s\n\n",
+		displayReal(prices.total),
+		displayDollar(prices.price),
+		displayReal(prices.subtotal),
+		IOF,
+		displayReal(prices.iof),
+		ptax.Timestamp.Format("02/01/2006 15:04"),
+		displayDollar(1),
+		displayReal(prices.dollar),
+	)
 	return err
 }
 
-func calcPrices(price float64, sellingPrice float64) Prices {
-	subtotal := price * sellingPrice
-	spread := (subtotal / 100) * Spread
-	subtotalPlusSpread := subtotal + spread
-	iof := (subtotalPlusSpread / 100) * IOF
+func calcPrices(price float64, dollar float64) Prices {
+	dollar += +(dollar / 100) * Spread
+	subtotal := dollar * price
+	iof := (subtotal / 100) * IOF
 	return Prices{
+		price:    price,
+		dollar:   dollar,
 		subtotal: subtotal,
-		spread:   spread,
 		iof:      iof,
-		total:    subtotalPlusSpread + iof,
+		total:    subtotal + iof,
 	}
 }
 
 type Prices struct {
-	subtotal float64
-	spread   float64
-	iof      float64
-	total    float64
+	price, dollar, subtotal, iof, total float64
 }
 
-func (p Prices) String() string {
-	return fmt.Sprintf(
-		"Subtotal: %s\nSpread %d%%: %s\nIOF %.2f%%: %s\nTotal: %s\n",
-		formatPrice(p.subtotal),
-		Spread,
-		formatPrice(p.spread),
-		IOF,
-		formatPrice(p.iof),
-		formatPrice(p.total))
-}
-
-func formatPrice(price float64) string {
+func displayReal(price float64) string {
 	return money.New(int64(price*100), "BRL").Display()
+}
+
+func displayDollar(price float64) string {
+	return money.New(int64(price*100), "USD").Display()
 }
