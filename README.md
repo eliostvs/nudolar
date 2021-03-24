@@ -24,9 +24,12 @@ Opções:
 
 ```
 nudolar 10.66
-Cotação do Dólar do dia 03/02/2021 13:31: R$5,68
-Subtotal: R$60,59
-Spread 4%: R$2,42
-IOF 6.38%: R$4,02
-Total: R$67,04
+
+ Total       = R$61,21
+
+ $10.00      = R$57,54
+ IOF (6.38%) = R$3,67
+
+ Conversão baseada na cotação de 24/03/2021 13:06:
+ $1.00       = R$5,75
 ```
