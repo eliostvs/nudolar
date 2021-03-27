@@ -109,7 +109,7 @@ func (app *appEnv) show(ptax PTAX, prices Prices) error {
 }
 
 func calcPrices(price float64, dollar float64) Prices {
-	dollar += +(dollar / 100) * Spread
+	dollar += (dollar / 100) * Spread
 	subtotal := dollar * price
 	iof := (subtotal / 100) * IOF
 	return Prices{
