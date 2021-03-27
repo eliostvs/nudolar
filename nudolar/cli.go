@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -33,6 +34,7 @@ func CLI(args []string) int {
 type appEnv struct {
 	price   float64
 	timeout time.Duration
+	hc      *http.Client
 }
 
 func (app *appEnv) fromArgs(args []string) error {
@@ -56,6 +58,8 @@ func (app *appEnv) fromArgs(args []string) error {
 		return err
 	}
 
+	app.hc = http.DefaultClient
+
 	return nil
 }
 
@@ -63,7 +67,7 @@ func (app *appEnv) run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), app.timeout)
 	defer cancel()
 
-	if ptax, err := NewPTAX(ctx); err != nil {
+	if ptax, err := NewPTAX(ctx, app.hc); err != nil {
 		return err
 	} else {
 		return app.show(ptax, calcPrices(app.price, ptax.SellingRate))

@@ -15,9 +15,8 @@ type ApiResponse struct {
 	Value []PTAX `json:"value"`
 }
 
-func NewPTAX(ctx context.Context) (PTAX, error) {
+func NewPTAX(ctx context.Context, hc *http.Client) (PTAX, error) {
 	var days int
-	hc := http.DefaultClient
 	for {
 		url := buildURL(days)
 		var resp ApiResponse
