@@ -94,8 +94,21 @@ func (app *appEnv) parsePrice(args []string) error {
 }
 
 func (app *appEnv) show(ptax PTAX, prices Prices) error {
+	template := `
+ Total       = %s
+
+ %-9v   = %s
+ IOF (%.2f%%) = %s
+
+ Conversão baseada na cotação de %s:
+ %-11v = %s
+
+ PTAX        = %s
+ Spread (4%%) = %s
+
+`
 	_, err := fmt.Printf(
-		"\n Total       = %s\n\n %-9v   = %s\n IOF (%.2f%%) = %s\n\n Conversão baseada na cotação de %s:\n %-11v = %s\n\n",
+		template,
 		displayReal(prices.total),
 		displayDollar(prices.price),
 		displayReal(prices.subtotal),
@@ -104,17 +117,20 @@ func (app *appEnv) show(ptax PTAX, prices Prices) error {
 		ptax.Timestamp.Format("02/01/2006 15:04"),
 		displayDollar(1),
 		displayReal(prices.dollar),
+		displayReal(ptax.SellingRate),
+		displayReal(prices.spread),
 	)
 	return err
 }
 
 func calcPrices(price float64, dollar float64) Prices {
-	dollar += (dollar / 100) * Spread
-	subtotal := dollar * price
+	spread := (dollar / 100) * Spread
+	subtotal := (spread + dollar) * price
 	iof := (subtotal / 100) * IOF
 	return Prices{
+		spread:   spread,
 		price:    price,
-		dollar:   dollar,
+		dollar:   dollar + spread,
 		subtotal: subtotal,
 		iof:      iof,
 		total:    subtotal + iof,
@@ -122,7 +138,7 @@ func calcPrices(price float64, dollar float64) Prices {
 }
 
 type Prices struct {
-	price, dollar, subtotal, iof, total float64
+	price, spread, dollar, subtotal, iof, total float64
 }
 
 func displayReal(price float64) string {

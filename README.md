@@ -25,11 +25,14 @@ Opções:
 ```
 nudolar 10.66
 
- Total       = R$61,21
+ Total       = R$67,27
 
- $10.00      = R$57,54
- IOF (6.38%) = R$3,67
+ $10.66      = R$63,23
+ IOF (6.38%) = R$4,03
 
- Conversão baseada na cotação de 24/03/2021 13:06:
- $1.00       = R$5,75
+ Conversão baseada na cotação de 26/03/2021 13:02:
+ $1.00       = R$5,93
+
+ PTAX        = R$5,70
+ Spread (4%) = R$0,23
 ```
