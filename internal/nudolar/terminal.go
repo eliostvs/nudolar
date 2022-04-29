@@ -132,7 +132,7 @@ func (a *app) Run() error {
 		return err
 	}
 
-	if err := a.Show(a.calculateSimulation(a.amount, quote)); err != nil {
+	if err := a.Show(a.calculatePrice(a.amount, quote)); err != nil {
 		return err
 	}
 
@@ -147,7 +147,7 @@ func (a *app) Show(simulation Calculation) error {
 	return nil
 }
 
-func (a *app) calculateSimulation(amount float64, quote Quote) Calculation {
+func (a *app) calculatePrice(amount float64, quote Quote) Calculation {
 	spread := (quote.Amount / 100) * Spread
 	exchangeRate := spread + quote.Amount
 	subtotal := exchangeRate * amount
