@@ -4,7 +4,7 @@ Simule o valor de uma compra internacional na sua fatura do Nubanco.
 
 ## Instalação
 
-`go get github.com/eliostvs/nudolar`
+`go install github.com/eliostvs/nudolar@latest`
 
 ## Uso
 
@@ -16,7 +16,7 @@ Exemplo:
   nudolar 10.66
 
 Opções:
-  -t duration
+  -timeout duration
         client timeout (default 10s)
 ```
 
