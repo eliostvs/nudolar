@@ -60,13 +60,13 @@ func (c Calculation) String() string {
 }
 
 func CLI(args []string) int {
-	var a app
+	var app App
 
-	if err := a.ParseArgs(args); err != nil {
+	if err := app.ParseArgs(args); err != nil {
 		return 1
 	}
 
-	if err := a.Run(); err != nil {
+	if err := app.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "Erro inesperado: %v\n", err)
 		return 2
 	}
@@ -74,12 +74,12 @@ func CLI(args []string) int {
 	return 0
 }
 
-type app struct {
+type App struct {
 	amount float64
 	hc     *http.Client
 }
 
-func (a *app) ParseArgs(args []string) error {
+func (a *App) ParseArgs(args []string) error {
 	var timeout time.Duration
 
 	fl := flag.NewFlagSet("nudolar", flag.ContinueOnError)
@@ -107,14 +107,16 @@ func (a *app) ParseArgs(args []string) error {
 	return nil
 }
 
-func (a *app) ParsePrice(args []string) error {
+func (a *App) ParsePrice(args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("valor não informado")
 	}
 
-	amount, err := strconv.ParseFloat(args[0], 64)
+	value := args[0]
+
+	amount, err := strconv.ParseFloat(value, 64)
 	if err != nil {
-		return fmt.Errorf("valor inválido: %s", args[0])
+		return fmt.Errorf("valor inválido: %s", value)
 	}
 
 	if amount <= 0.0 {
@@ -126,7 +128,7 @@ func (a *app) ParsePrice(args []string) error {
 	return nil
 }
 
-func (a *app) Run() error {
+func (a *App) Run() error {
 	quote, err := GetQuote(context.Background(), a.hc)
 	if err != nil {
 		return err
@@ -139,15 +141,15 @@ func (a *app) Run() error {
 	return nil
 }
 
-func (a *app) Show(simulation Calculation) error {
-	_, err := fmt.Printf("%s", simulation)
+func (a *App) Show(calc Calculation) error {
+	_, err := fmt.Printf("%s", calc)
 	if err != nil {
 		return fmt.Errorf("erro ao exibir a simulação: %w", err)
 	}
 	return nil
 }
 
-func (a *app) calculatePrice(amount float64, quote Quote) Calculation {
+func (a *App) calculatePrice(amount float64, quote Quote) Calculation {
 	spread := (quote.Amount / 100) * Spread
 	exchangeRate := spread + quote.Amount
 	subtotal := exchangeRate * amount
